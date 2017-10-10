@@ -1,33 +1,32 @@
-Python 3.6.2 (v3.6.2:5fd33b5, Jul  8 2017, 04:57:36) [MSC v.1900 64 bit (AMD64)] on win32
-Type "copyright", "credits" or "license()" for more information.
->>> name = "TitleState"
->>> image = None
->>> def enter():
-	global image
-	image = load_image('title.png')
+nmae = 'titlestate'
+image = None
+import game_framework
+import main_state
+from pico2d import *
 
-	
->>> def exit():
-	global image
-	del(image)
+def enter():
+    global image
+    image = load_image('title.png')
 
-	
->>> def handle_events()"
-SyntaxError: EOL while scanning string literal
->>> def handle_events():
-	events = get_events()
-	for event in events:
-		if event.type == SDL_QUIT:
-			game_framework.quit()
-		else:
-			if(event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
-				game_framework.quit()
+def exit():
+    global image
+    del(image)
 
-				
->>> def draw():
-	clear_canvas()
-	image.draw(400, 300)
-	update_canvas()
+def update():
+    pass
 
-	
->>> 
+def handle_events():
+    events = get_events()
+    for event in events:
+        if event.type == SDL_QUIT:
+            game_framework.quit()
+        else:
+            if(event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
+                game_framework.quit()
+            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_f):
+                game_framework.change_state(main_state)
+
+def draw():
+    clear_canvas()
+    image.draw(400, 300)
+    update_canvas()

@@ -1,37 +1,48 @@
-
-name = "start_state"
 image = None
 logo_time = 0.0
+import game_framework
+
+import title_state
+
+from pico2d import *
+
+
 def enter():
-	global image
-	open_canvas()
-	Image = load_image('kpu_credit.png')
+    global image
+    image = load_image('kpu_credit.png')
 
-	
+
 def exit():
-	global image
-	del(image)
-	close_canvas()
+    global image
+    del (image)
 
-	
+
 def update():
-	global logo_time
+    global logo_time
+    if (logo_time > 1.0):
+        logo_time = 0
+        game_framework.change_state(title_state)
 
-	
-def update():
-	global logo_time
-	if (logo_time > 1.0):
-		logo_time = 0
-		game_framework.quit()
-	delay(0.01)
-	logo_time += 0.01
+    delay(0.01)
+    logo_time += 0.01
 
-	
+
 def draw():
-	global image
-	clear_canvas()
-	image.draw(400, 300)
-	update_canvas()
+    global image
+    clear_canvas()
+    image.draw(400, 300)
+    update_canvas()
 
-	
+def handle_events():
+    events = get_events()
+    for event in events:
+        if event.type == SDL_QUIT:
+            game_framework.quit()
+        else:
+            if(event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
+                game_framework.quit()
+
+
+
+
 
