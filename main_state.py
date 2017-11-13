@@ -8,7 +8,7 @@ import random
 class Fallen:
     def __init__(self):
         self.x, self.y = random.randint(100, 700), random.randint(500, 100000)
-        self.image = load_image('falling_object_120623_172119.png')
+        self.image = load_image('image_obstacle.png')
 
     def update(self):
         self.y = self.y - 10;
@@ -35,16 +35,29 @@ class Car:
 
     def __init__(self):
         self.x, self.y = (400, 70)
-        self.image = load_image('car_sprite.png')
-        self.frmae3 = 0
+        self.image = load_image('car_sprite2.png')
+        self.frame3 = 1
         self.frame2 = 1
+        self.leftstate = 1
+        self.speed = 5
 
     def update(self):
-        self.x += 2
+        if self.frame2 == 3:
+            self.frame3 = (self.frame3 + 1) % 3 + 1
+        self.frame2 = (self.frame2 + 1) % 4
+        if self.leftstate == 2:
+            self.x -= self.speed
+        if self.leftstate == 0:
+            self.x += self.speed
+
+
 
 
     def draw(self):
-        self.image.clip_draw(72,60, 70, 35, self.x, self.y)
+        self.image.clip_draw(70*self.frame2,35*self.frame3, 70, 30, self.x, self.y)
+
+
+
 
 
 
@@ -52,6 +65,9 @@ class Grass:
     def __init__(self):
         self.x, self.y = (400, 30)
         self.image = load_image('grass.png')
+        self.bgm = load_music('football.mp3')
+        self.bgm.set_volume(64)
+        self.bgm.repeat_play()
 
     def draw(self):
         self.image.draw(self.x, self.y)
@@ -68,6 +84,21 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_state(title_state)
+        if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_LEFT:
+                car.leftstate = 2
+            elif event.key == SDLK_RIGHT:
+                car.leftstate = 0
+            if event.key == SDLK_SPACE:
+                car.speed = 10
+        if event.type == SDL_KEYUP:
+            if event.key == SDLK_SPACE:
+                car.speed = 5
+            if event.key == SDLK_LEFT:
+                car.leftstate = 1
+            if event.key == SDLK_RIGHT:
+                car.leftstate = 1
+
 
 def update():
     for fallen in group_fallen:

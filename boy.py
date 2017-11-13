@@ -12,6 +12,44 @@ class Grass:
     def draw(self):
         self.image.draw(400, 30)
 
+class Ball:
+    image = None;
+
+    def __init__(self):
+        self.x, self.y = random.radint(200, 790), 60
+        if Ball.image == None:
+            Ball.image = load_image('')
+
+    def update(self, frame_time):
+        pass
+
+    def draw(self):
+        self.image.draw(self.x, self.y)
+
+    def get_bb(self):
+        return self.x -10, self.y - 10, self.x + 10, self.y + 10
+
+
+def create_world():
+    global boy, grass, balls
+    boy = Boy()
+    balls = [Ball() for i in range (10)]
+    grass = Grass()
+
+def collide(a, b):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a > right_b : return False
+    if right_a < left_b : return False
+    if top_a < bottom_b : return False
+    if bottom_a > top_b : return False
+    return True
+
+
+
+
+
 
 class Boy:
     image = None
@@ -19,6 +57,15 @@ class Boy:
     COUNT_NUM = 1
 
     LEFT_RUN, RIGHT_RUN, LEFT_STAND, RIGHT_STAND = 0, 1, 2, 3
+
+    PIXEL_PER_METER = (10.0/0.3)
+    RUN_SPEED_KMPH = 20.0
+    RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 /60.0)
+    RUN_SPEED_MPS = (RUN_SPEED_MPM/ 60.0)
+    RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+    def get_bb(self):
+        return self.x - 20, self.y - 40, self.x + 20, self.y + 40
 
     def __init__(self):
         self.x, self.y = random.randint(100, 700), 90
@@ -88,10 +135,11 @@ class Boy:
 
 
 def enter():
-    global team, grass, chr_st, running
+    global team, grass, chr_st, running, balls
     i = 0
     team = [Boy() for i in range(1000)]
     grass = Grass()
+    balls = [Ball() for i in range(10)]
     chr_st = -1
     running = True
 
@@ -175,6 +223,13 @@ def update():
 
     for boy in team:
         boy.update()
+
+    for ball in balls:
+        ball.update()
+
+    for ball in balls:
+        if collide(boy, ball):
+            print("cllision")
 
     delay(0.01)
 
