@@ -93,7 +93,7 @@ class Fallen:
             self.ef2.draw(self.x + random.randint(-40, 40), self.y + random.randint(-20, 20) + self.add)
             self.ef3.draw(self.x + random.randint(-40, 40), self.y + random.randint(-20, 20) + self.add)
         if self.state == 0:
-            self.y = 100
+            self.y = 110
             self.stack = self.stack + 1
             self.stack2 = self.stack2 + 1
             if self.stack2 == 4:
