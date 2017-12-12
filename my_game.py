@@ -1,3 +1,6 @@
+import platform
+import os
+
 import game_framework
 
 import start_state
