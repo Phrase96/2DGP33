@@ -90,6 +90,31 @@ class Bomb:
         if self.state == 1:
             self.ef.clip_draw(147 * self.frame,107 * self.frame2,147,107,self.x, self.y, 441, 321)
 
+class Number:
+    def __init__(self):
+        self.x = 400
+        self.y = 500
+        self.num = 0
+        self.num2 = 0
+        self.num3 = 0
+        self.timestack = 0
+        self.image = load_image('numbers.png')
+
+    def draw(self):
+        self.image.clip_draw(40  * self.num ,0,40,64, self.x, self.y)
+        if self.num2 > 9:
+            self.image.clip_draw(40  * self.num3, 0, 40, 64, self.x - 40, self.y)
+    def update(self):
+        self.timestack += 1
+        if self.timestack == 100:
+            self.timestack = 0
+            self.num += 1
+            self.num2 += 1
+            if self.num == 10:
+                self.num = 0
+                self.num3 += 1
+
+
 
 class Sh:
     def __init__(self):
@@ -101,9 +126,10 @@ class Sh:
         self.efstack = 0
         self.frame = 0
         self.Sstate3 = 0
+        self.efstack2 = 0
         self.x, self.y = random.randint(0, 800), random.randint(500, 100000)
         if self.ef == None:
-            self.ef = load_image('shiled_02.png')
+            self.ef = load_image('shef.png')
         if self.image == None:
             self.image = load_image('shiled_01.png')
 
@@ -113,9 +139,16 @@ class Sh:
     def draw(self):
         global Sstate2
         if self.Sstate3 == 1:
-            self.frame += 1
+
             self.efstack +=1
-            self.ef.draw(car.x, car.y, 50, 50)
+            self.efstack2 += 1
+            self.ef.clip_draw(50 * self.frame, 0, 50, 50, car.x, car.y)
+            if self.efstack2 == 2:
+                self.frame += 1
+                self.efstack2 = 0
+            self.efstack += 1
+            if self.frame == 4:
+                self.frame = 0
             if self.efstack == 200:
                 self.efstack = 0
                 print('스택 꽉참')
@@ -250,7 +283,8 @@ def enter():
     global group_fallen
     global car
     global group_sh
-
+    global number
+    number = Number()
     group_sh = [Sh() for i in range(50)]
     global sh
     sh = Sh()
@@ -395,6 +429,7 @@ def handle_events():
 
 
 def update():
+    number.update()
     if gamestate == 0:
         for fallen in group_fallen:
             fallen.colide()
@@ -429,6 +464,8 @@ def draw():
             fallen.draw()
         for sh in group_sh:
             sh.draw()
+
+        number.draw()
         update_canvas()
     else:
         global gameover
